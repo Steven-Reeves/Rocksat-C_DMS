@@ -1,5 +1,6 @@
 // Basic tests to confirm Aruduino functionality
 
+
 int x = 0; 
 
 void setup() {
@@ -16,7 +17,8 @@ void loop() {
 void TimeToSerial()
 {
   Serial.print("Second:");
-  Serial.print("");
   Serial.print(x++);
+  Serial.println();
 }
+
 
