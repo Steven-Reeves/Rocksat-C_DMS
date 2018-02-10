@@ -1,0 +1,15 @@
+*************Initating log*****************
+2018-02-07 01:13:59.541992
+Looping to create data in two dimentional array
+Data Written!
+Data Written!
+Data Written!
+Data Written!
+Data Written!
+Data Written!
+Data Written!
+Data Written!
+Data Written!
+Fake data initialized
+This is where to start a .csv file
+Data written to .csv!
