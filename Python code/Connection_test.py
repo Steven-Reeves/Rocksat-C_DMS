@@ -8,8 +8,5 @@ ser.baudrate=9600
 
 while True:
     print("Reading serial line...")
-    read_ser=ser.readline()
-    if(read_ser != null):
-        print(read_ser)
-    
-
+    read_ser = ser.readline()
+    print (read_ser)
