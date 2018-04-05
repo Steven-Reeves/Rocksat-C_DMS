@@ -17,15 +17,12 @@ GPIO.setmode(GPIO.BOARD) # Use the GPIO pin numbers printed on the Pi
 # GPIO.setup(chan_out, GPIO.OUT)
 
 # Original code by Steven:
-s1 = serial.Serial("/dev/ttyAMA0",9600)  #change ACM number as found from ls /dev/tty/ACM*
+# s1 = serial.Serial("/dev/ttyAMA0",9600)  #change ACM number as found from ls /dev/tty/ACM*
 # s2 = serial.Serial(port, baudrate)
 
-def read_serial(port, baudrate, filename, type_flag=1, num_bytes=1):
+def read_serial(port, baudrate=9600, filename, file_type='.txt', num_bytes=1):
 	s = serial.Serial(port, baudrate)
-	if type_flag == 1:
-		file = open(filename + '.txt', 'w')
-	else:
-		file = open(filename + '.csv', 'w')
+		file = open(filename + file_type, 'w')
 	while True:
 		buffer = s.read(num_bytes) # reads bytes of data, default = 1
 		# decode if necessary
