@@ -1,7 +1,9 @@
 # Object oriented implementation of DMS
-# Steven Reeves
+# Author: Steven Reeves
+# Co-author: Andy Horn
 # RockSat-C Software Engineering Lead
 # 2/11/2018
+# Last modified: 4/4/2018
 # Updating this to check git!
 
 import time
