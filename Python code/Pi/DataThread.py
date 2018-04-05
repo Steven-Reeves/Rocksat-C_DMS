@@ -12,7 +12,7 @@ class DataThread:
     def __watch_threads(self):
         start_time = time.time()
         while self.__threads:
-            for t in self.threads:
+            for t in self.__threads:
                 if not t.isAlive():
                     self.__threads.remove(t)
                     self.num_threads -= 1

@@ -5,7 +5,7 @@
 # Purpose: Functions to read serial data and write to a file.
 
 
-
+from interruptingcow import timeout
 import serial
 import RPi.GPIO as GPIO # Only runs ON the Pi, will not run on Windows.
 
@@ -21,10 +21,18 @@ GPIO.setmode(GPIO.BOARD) # Use the GPIO pin numbers printed on the Pi
 # s2 = serial.Serial(port, baudrate)
 
 def read_serial(port, baudrate=9600, filename, file_type='.txt', num_bytes=1):
-	s = serial.Serial(port, baudrate)
+        run = True
+	#s = serial.Serial(port, baudrate)
 		file = open(filename + file_type, 'w')
-	while True:
-		buffer = s.read(num_bytes) # reads bytes of data, default = 1
-		# decode if necessary
-		file.write(buffer)
-		print(str(buffer))
+	while run:
+            try:
+                with timeout(3, RunTimeError): # will break function after 3 seconds, throwing a RunTimeError if timeout is reached
+                    buffer = s.read(num_bytes) # reads bytes of data, default = 1
+                    # decode if necessary
+                    file.write(buffer)
+                    print(str(buffer))
+            except RunTimeError:
+                # No communication from Arduino
+                print("Communication failed.")
+                run = False
+                
