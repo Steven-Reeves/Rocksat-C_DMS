@@ -30,11 +30,3 @@ def read_serial(port, baudrate, filename, type_flag=1, num_bytes=1):
 		buffer = s.read(num_bytes) # reads 1 byte of data
 		# decode if necessary
 		file.write(buffer)
-
-
-while True:
-    print("Reading serial line...")
-    read_ser = ser.readline()
-    # read_byte = ser.read() # read() reads a number of bytes (default = 1)
-    # read_byte = read_byte.decode("UTF-8") # decode incoming bytes if necessary
-    print (read_ser)
