@@ -1,6 +1,6 @@
 # Author: 	Andy Horn
 # Date:		4/4/18
-# Modified: 	4/4/18
+# Modified: 	4/5/18
 #
 # Purpose: Functions to read serial data and write to a file.
 
@@ -31,6 +31,10 @@ def read_serial(port, baudrate=9600, filename, file_type='.txt', num_bytes=1):
             
 '''
 See the thread_func method 'timer_test' and 'alarm' for examples on how to 
-implement a timer.
+implement a timer. We should include a use_timer flag and a time_interval
+argument in the read_serial method, this will allow us to use the same method
+for every experiment, but alter whether or not a timer is used, and if so, how
+long it should wait for Arduino communications before breaking out and 
+attempting to reset and reconnect.
 '''
                 

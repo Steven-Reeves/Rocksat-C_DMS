@@ -1,7 +1,7 @@
 # Goal: Read serial data from multiple ports through multiple threads.
 # Author:	Andy Horn
 # Date:		4/4/2018
-# Modified:	4/4/2018
+# Modified:	4/5/2018
 
 from DataThread import DataThread
 #from serial_func import read_serial
