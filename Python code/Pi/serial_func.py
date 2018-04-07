@@ -6,10 +6,10 @@
 
 
 import serial
-import RPi.GPIO as GPIO # Only runs ON the Pi, will not run on Windows.
+#import RPi.GPIO as GPIO # Only runs ON the Pi, will not run on Windows.
 
-GPIO.setwarnings(False) # Turn warnings off
-GPIO.setmode(GPIO.BOARD) # Use the GPIO pin numbers printed on the Pi
+#GPIO.setwarnings(False) # Turn warnings off
+#GPIO.setmode(GPIO.BOARD) # Use the GPIO pin numbers printed on the Pi
 # chan_in = [] # put all necessary input channels (pins) in this list
 # chan_out = [] # put all necessary output channels (pins) in this list
 # GPIO.setup(chan_in, GPIO.IN)
@@ -19,12 +19,14 @@ GPIO.setmode(GPIO.BOARD) # Use the GPIO pin numbers printed on the Pi
 # s1 = serial.Serial("/dev/ttyAMA0",9600)  #change ACM number as found from ls /dev/tty/ACM*
 # s2 = serial.Serial(port, baudrate)
 
-def read_serial(port, baudrate=9600, filename, file_type='.txt', num_bytes=1):
+def read_serial(port, baudrate=9600, filename='none', file_type='.txt', num_bytes=1):
         run = True
-	#s = serial.Serial(port, baudrate)
-		file = open(filename + file_type, 'w')
+	if filename == 'none':
+		filename = 'serial_in'
+	s = serial.Serial(port, baudrate)
+	file = open(filename + file_type, 'w')
 	while run:
-            buffer = s.read(num_bytes) # reads bytes of data, default = 1
+            buffer = s.readline() # reads bytes of data, default = 1
             # decode if necessary
             file.write(buffer)
             print(str(buffer))
