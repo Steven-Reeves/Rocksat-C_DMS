@@ -23,15 +23,16 @@ import serial
 def timeout(run, port):
 	print("Timeout, thread ceased.")
 	port.write('R')
+	run[0] += 1
 
 def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=1):
-        run = [1]
+        run = [0]
 	if filename == 'none':
 		filename = 'serial_in'
 	s = serial.Serial(port, baudrate)
 	file = open(filename + file_type, 'w')
 	try:
-		while run:
+		while run[0] < 5:
 			timer = Timer(wait_time, timeout, (run,s))
 			timer.start()
 		        buffer = s.readline() # reads bytes of data, default = 1
@@ -39,10 +40,10 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
 	            	# decode if necessary
 	            	file.write(buffer)
 	            	print(str(buffer))
-		if not run:
+		if run[0] == 5:
 			s.close()
 			file.close()
-			print("Exit thread")
+			print("Arduino failed 5 times, Exit thread")
 	except KeyboardInterrupt:
 		s.close()
 		file.close()
