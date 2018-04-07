@@ -5,6 +5,7 @@
 # Purpose: Functions to read serial data and write to a file.
 
 
+from threading import Timer
 import serial
 #import RPi.GPIO as GPIO # Only runs ON the Pi, will not run on Windows.
 
@@ -19,18 +20,33 @@ import serial
 # s1 = serial.Serial("/dev/ttyAMA0",9600)  #change ACM number as found from ls /dev/tty/ACM*
 # s2 = serial.Serial(port, baudrate)
 
-def read_serial(port, baudrate=9600, filename='none', file_type='.txt', num_bytes=1):
-        run = True
+def timeout(run, port):
+	print("Timeout, thread ceased.")
+	port.write('R')
+
+def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=1):
+        run = [1]
 	if filename == 'none':
 		filename = 'serial_in'
 	s = serial.Serial(port, baudrate)
 	file = open(filename + file_type, 'w')
-	while run:
-            buffer = s.readline() # reads bytes of data, default = 1
-            # decode if necessary
-            file.write(buffer)
-            print(str(buffer))
-            
+	try:
+		while run:
+			timer = Timer(wait_time, timeout, (run,s))
+			timer.start()
+		        buffer = s.readline() # reads bytes of data, default = 1
+			timer.cancel()
+	            	# decode if necessary
+	            	file.write(buffer)
+	            	print(str(buffer))
+		if not run:
+			s.close()
+			file.close()
+			print("Exit thread")
+	except KeyboardInterrupt:
+		s.close()
+		file.close()
+
 '''
 See the thread_func method 'timer_test' and 'alarm' for examples on how to 
 implement a timer. We should include a use_timer flag and a time_interval
@@ -39,4 +55,3 @@ for every experiment, but alter whether or not a timer is used, and if so, how
 long it should wait for Arduino communications before breaking out and 
 attempting to reset and reconnect.
 '''
-                
