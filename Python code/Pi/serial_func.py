@@ -50,3 +50,5 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
         except KeyboardInterrupt:
             s.close()
             file.close()
+
+            #wooooo!
