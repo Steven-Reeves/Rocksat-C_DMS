@@ -14,7 +14,7 @@ def timeout(port, name):
     port.flush()
     print("[Timeout] Port flushed")
 
-def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=1):
+def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=1, retries=0):
     num_failures = 0
     if filename == 'none':
         filename = 'serial_in'
@@ -34,7 +34,7 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
                 timer.cancel()
             # decode if necessary
             if buffer != '':
-                file.write(str(buffer))
+                file.write(buffer)
                 print("[Buffer] {}".format(str(buffer)))
             else:
                 print("[read_serial] No input")
