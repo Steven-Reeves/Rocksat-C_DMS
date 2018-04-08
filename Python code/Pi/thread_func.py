@@ -35,18 +35,18 @@ def timer_test(time_to_watch=0):
     # simulate passing by reference.
     while run and count < 10:
         print("Count: %i") % count
-	if time_to_watch:
-	        timer = Timer(time_to_watch, alarm, (count, run)) # create a new timer thread:
-	        # this is necessary, as a timer thread can only be started once, so we
-	        # must create a new thread for each loop through.
-	        timer.start() # start the timer
-        time.sleep(count) # if sleeping longer than 3 seconds, timer should call
+    if time_to_watch:
+        timer = Timer(time_to_watch, alarm, (count, run)) # create a new timer thread:
+        # this is necessary, as a timer thread can only be started once, so we
+        # must create a new thread for each loop through.
+        timer.start() # start the timer
+    time.sleep(count) # if sleeping longer than 3 seconds, timer should call
         # the 'alarm' method above.
-	if time_to_watch:
-	        timer.cancel() # cancel the timer to prevent false timeouts
-        print("Count: %i completed.") % count
-        if run:
-            count += 1
+    if time_to_watch:
+        timer.cancel() # cancel the timer to prevent false timeouts
+    print("Count: %i completed.") % count
+    if run:
+        count += 1
     if not run:
         # if the process is killed by a timeout, success!
         print("Success! Process ended at count " + str(count)) 
