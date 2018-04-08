@@ -19,11 +19,13 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
     num_failures = 0
     if filename == 'none':
         filename = 'serial_in'
-    s = serial.Serial(port, baudrate, timeout=wait_time*2)
+    s = serial.Serial(port, baudrate, timeout=wait_time*2, dsrdtr=True)
     time.sleep(.01)
     file = open(filename + file_type, 'wb')
+    time.sleep(.01)
     try:
         while True:
+            s.flush()
             if wait_time > 0:
                 timer = Timer(wait_time, timeout, (s, port))
                 timer.start()
