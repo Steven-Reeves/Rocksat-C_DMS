@@ -1,4 +1,9 @@
 import serial
+import pigpio
+
+# Initial pins for testing pigpio library
+RX=23
+TX=24
 
 ser = serial.Serial('/dev/serial0',9600, timeout=1)
 
