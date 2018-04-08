@@ -38,7 +38,7 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
             while run[0] < 5:
                 timer = Timer(wait_time, timeout, (run,s))
                 timer.start()
-                buffer = s.readline() # reads bytes of data, default = 1
+                buffer = s.readline(timeout=wait_time) # reads bytes of data, default = 1
                 timer.cancel()
                 # decode if necessary
                 file.write(buffer)

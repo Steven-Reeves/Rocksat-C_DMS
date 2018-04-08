@@ -17,8 +17,8 @@ class DataThread:
                     self.__threads.remove(t)
                     self.num_threads -= 1
         if not self.__threads:
-            print("All threads complete.")
-            print("Time to complete: " + str("%.2f" % (time.time() - start_time)))
+            print("[Watcher] All threads complete.")
+            print("[Watcher] Time to complete: " + str("%.2f" % (time.time() - start_time)))
             self.num_threads = 0
             self.started = False
 
@@ -30,7 +30,7 @@ class DataThread:
             self.__threads.append(t)
             self.num_threads += 1
         else:
-            print("Cannot add threads while running.")
+            print("[add_thread] Cannot add threads while running.")
 
     def start(self, empty=False):
         for t in self.__threads:
@@ -38,7 +38,7 @@ class DataThread:
         self.started = True
         if empty:
             # Create independent thread to monitor other threads
-            Thread(target=self.__watch_threads, args=(self,)).start() 
+            Thread(target=self.__watch_threads, args=(self,)).start()
 
     def purge(self):
         self.__threads.clear()
