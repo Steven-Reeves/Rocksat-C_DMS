@@ -33,7 +33,7 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
             if wait_time > 0:
                 timer.cancel()
             # decode if necessary
-            if buffer != '':
+            if buffer != b'':
                 file.write(buffer)
                 print("[Buffer] {}".format(str(buffer)))
             else:
