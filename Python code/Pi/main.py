@@ -1,10 +1,9 @@
 # Goal: Read serial data from multiple ports through multiple threads.
 # Author:	Andy Horn
 # Date:		4/4/2018
-# Modified:	4/5/2018
+# Modified:	4/8/2018
 
 from DataThread import DataThread
-from thread_func import print_time, timer_test
 from serial_func import read_serial
 
 try:

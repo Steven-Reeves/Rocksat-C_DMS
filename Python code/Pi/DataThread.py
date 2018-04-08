@@ -1,3 +1,9 @@
+# Author:       Andy Horn
+# Date:         4/4/2018
+# Modified:     4/8/2018
+# Filename:     DataThread.py
+# Overview:     DataThread class that manages simultaneous threads
+
 from threading import Thread
 import time
 

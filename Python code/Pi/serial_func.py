@@ -1,8 +1,9 @@
 # Author: 	    Andy Horn
 # Date:		    4/4/18
-# Modified: 	4/5/18
-#
-# Purpose: Functions to read serial data and write to a file.
+# Modified: 	4/8/18
+# Filename:     serial_func.py
+# Overview:     Defines functions to read serial data from a USB port, then print
+#               the data to the screen and write it to a file.
 
 
 from threading import Timer
@@ -20,19 +21,17 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
         filename = 'serial_in'
     s = serial.Serial(port, baudrate, timeout=wait_time*2)
     time.sleep(.01)
-        # Commented out line below for Python 3.5
-        #file = open(filename + file_type, 'w')
-        # Line below is for Python 3.5:
     file = open(filename + file_type, 'wb')
     try:
         while True:
             if wait_time > 0:
                 timer = Timer(wait_time, timeout, (s, port))
                 timer.start()
-            buffer = s.readline() # reads bytes of data, default = 1
+
+            buffer = s.readline()
+
             if wait_time > 0:
                 timer.cancel()
-            # decode if necessary
             if buffer != b'':
                 file.write(buffer)
                 print("[Buffer] {}".format(str(buffer)))
