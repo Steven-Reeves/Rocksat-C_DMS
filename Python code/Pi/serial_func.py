@@ -50,12 +50,3 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
         except KeyboardInterrupt:
             s.close()
             file.close()
-
-'''
-See the thread_func method 'timer_test' and 'alarm' for examples on how to 
-implement a timer. We should include a use_timer flag and a time_interval
-argument in the read_serial method, this will allow us to use the same method
-for every experiment, but alter whether or not a timer is used, and if so, how
-long it should wait for Arduino communications before breaking out and 
-attempting to reset and reconnect.
-'''
