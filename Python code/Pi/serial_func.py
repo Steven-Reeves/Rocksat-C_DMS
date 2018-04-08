@@ -11,7 +11,7 @@ import serial
 import time
 
 def timeout(port, name):
-    print("[Timeout] Device on port {} timeout, flushing port.".format(name))
+    print("[Timeout] Device [{}] is unresponsive, flushing port.".format(name))
     port.flush()
     print("[Timeout] Port flushed")
 
@@ -34,12 +34,12 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
                 timer.cancel()
             if buffer != b'':
                 file.write(buffer)
-                print("[Buffer] {}".format(str(buffer)))
+                print("[{}] {}".format(port, str(buffer)))
             else:
-                print("[read_serial] No input")
+                print("[{}] No input".format(port))
                 num_failures += 1
                 if num_failures >= retries:
-                    print("Device {} failed, exiting thread.".format(port))
+                    print("Device [{}] has failed, exiting thread.".format(port))
                     s.close()
                     file.close()
                     break
