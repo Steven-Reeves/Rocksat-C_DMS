@@ -39,7 +39,3 @@ class DataThread:
         if empty:
             # Create independent thread to monitor other threads
             Thread(target=self.__watch_threads, args=(self,)).start()
-
-    def purge(self):
-        self.__threads.clear()
-        self.started = False
