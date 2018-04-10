@@ -10,13 +10,20 @@ from threading import Timer
 import serial
 import time
 
-def timeout(port, name):
+def times_up(run):
+    del run[0]
+    print("[times_up] Countdown complete.")
+
+def read_timeout(port, name):
     print("[Timeout] Device [{}] is unresponsive, flushing port.".format(name))
     port.flush()
     print("[Timeout] Port flushed")
 
 def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
     num_failures = 0
+    run = ['true']
+    countdown = Timer(60, times_up, (run,))
+    countdown.start()
     if filename == 'none':
         filename = 'serial_in'
     with serial.Serial(port, baudrate, timeout=wait_time*2, dsrdtr=True) as s:
@@ -28,10 +35,10 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
     # or open and close the file each time the while statement executes. Not closing the file
     # properly can lead to blank output, especially in Python3.
         try:
-            while True:
+            while run:
 #            s.flush()
                 if wait_time > 0:
-                    timer = Timer(wait_time, timeout, (s, port))
+                    timer = Timer(wait_time, read_timeout, (s, port))
                     timer.start()
 #            if s.in_waiting() > 0:
                     buffer = s.readline().decode('ascii')
