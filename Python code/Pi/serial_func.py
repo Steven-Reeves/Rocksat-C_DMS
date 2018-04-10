@@ -15,40 +15,44 @@ def timeout(port, name):
     port.flush()
     print("[Timeout] Port flushed")
 
-def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=0):
+def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
     num_failures = 0
     if filename == 'none':
         filename = 'serial_in'
     s = serial.Serial(port, baudrate, timeout=wait_time*2, dsrdtr=True)
     time.sleep(.01)
-    with open(filename + file_type, 'wb') as file: #can use "with" to automatically close file,
+    s.flush()
+#    with open(filename + file_type, 'wb') as file: #can use "with" to automatically close file,
     # or open and close the file each time the while statement executes. Not closing the file
     # properly can lead to blank output, especially in Python3.
-        try:
-            while True:
-                s.flush()
-                if wait_time > 0:
-                    timer = Timer(wait_time, timeout, (s, port))
-                    timer.start()
+    try:
+        while True:
+            s.flush()
+            if wait_time > 0:
+                timer = Timer(wait_time, timeout, (s, port))
+                timer.start()
 
-                buffer = s.readline()
-                
-                if wait_time > 0:
-                    timer.cancel()
-                if buffer != b'':
+            buffer = s.readline().decode('ascii')
+            time.sleep(.01)
+            if wait_time > 0:
+                timer.cancel()
+            if buffer.split():
+                with open(filename + file_type, 'a') as file:
                     file.write(buffer)
-                    print("[{}] {}".format(port, str(buffer)))
-                else:
-                    print("[{}] No input".format(port))
-                    num_failures += 1
-                    if num_failures >= retries:
-                        print("Device [{}] has failed, exiting thread.".format(port))
-                        s.close()
-                        file.close()
-                        break
-        except KeyboardInterrupt:
-            s.close()
-            file.close()
-        finally:
-            s.close()
-            file.close()
+                    file.close()
+#                    print("[{}] {}".format(port, str(buffer.decode('ascii'))))
+                print("[{}] {}".format(port, str(buffer)))
+            else:
+                print("[{}] No input".format(port))
+                num_failures += 1
+                if num_failures > retries:
+                    print("Device [{}] has failed, exiting thread.".format(port))
+                    s.close()
+                    file.close()
+                    break
+    except KeyboardInterrupt:
+        s.close()
+        file.close()
+    finally:
+        s.close()
+        file.close()
