@@ -9,9 +9,11 @@ import sniff
 
 try:
     portList = sniff.sniff()
+    print("Found {} ports in use. Connecting.".format(len(portList)))
     dt = DataThread()
     for port in portList:
         dt.add_thread(read_serial, '/dev/'+port, 57600, port)
+        print("Connected to {}.".format(port))
 #    dt.add_thread(read_serial, "/dev/ttyACM0", 57600, "Test-1")
  #   dt.add_thread(read_serial, "/dev/ttyACM1", 57600, "Test-2")
 	# Tests for USB hub local to Steven's pi
