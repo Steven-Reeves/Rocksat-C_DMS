@@ -20,8 +20,10 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
     if filename == 'none':
         filename = 'serial_in'
     s = serial.Serial(port, baudrate, timeout=wait_time*2, dsrdtr=True)
-    time.sleep(.01)
+#    s.open()
+#    time.sleep(.01)
     s.flush()
+    time.sleep(.02)
 #    with open(filename + file_type, 'wb') as file: #can use "with" to automatically close file,
     # or open and close the file each time the while statement executes. Not closing the file
     # properly can lead to blank output, especially in Python3.
@@ -39,7 +41,7 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
             if buffer.split():
                 with open(filename + file_type, 'a') as file:
                     file.write(buffer)
-                    file.close()
+#                    file.close()
 #                    print("[{}] {}".format(port, str(buffer.decode('ascii'))))
                 print("[{}] {}".format(port, str(buffer)))
             else:
@@ -53,6 +55,12 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
     except KeyboardInterrupt:
         s.close()
         file.close()
+        print("[read_serial] KeyboardInterrupt")
+    except:
+        s.close()
+        file.close()
+        print("[read_serial] Unhandled Exception")
     finally:
         s.close()
         file.close()
+        print("[read_serial] Exit Code 0")
