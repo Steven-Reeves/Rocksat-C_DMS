@@ -74,10 +74,12 @@ class DataThread:
             print("[read_serial] Exit Code 0")
 
     # *vals will take any remaining values as a tuple
-    def add_thread(self, *vals):
-        vals = [self.num_threads] + vals
+    def add_thread(self, *values):
+        list = list(values)
+        list[:0] = self.num_threads
+        new_values = tuple(list)
         if not self.started:
-            t = Thread(target=self.read_serial, args=vals)
+            t = Thread(target=self.read_serial, args=new_values)
             self.__threads.append(t)
             self.num_threads += 1
         else:
