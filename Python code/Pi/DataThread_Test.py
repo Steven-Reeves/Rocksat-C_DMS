@@ -4,8 +4,8 @@
 # Filename:     DataThread.py
 # Overview:     DataThread class that manages simultaneous threads
 
-from threading import Thread
-import time
+from threading import Thread, Timer
+import time, serial
 
 class DataThread:
 
@@ -13,6 +13,19 @@ class DataThread:
         self.__threads = []
         self.num_threads = 0
         self.started = False
+        self.run = False
+        self.
+
+#    @staticmethod
+    def mainTimerComplete(self, run):
+        del run[0]
+        print("[times_up] Countdown complete.")
+
+#    @staticmethod
+    def serialReadTimeout(self, port, name):
+        print("[Timeout] Device [{}] is unresponsive, flushing port.".format(name))
+        port.flush()
+        print("[Timeout] Port flushed")
 
     @staticmethod
     def __watch_threads(self):
@@ -28,11 +41,11 @@ class DataThread:
             self.num_threads = 0
             self.started = False
 
-    #staticmethod
-    def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
+    @staticmethod
+    def read_serial(self, port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
         num_failures = 0
         run = ['1']
-        countdown = Timer(60, mainTimerComplete, (run,))
+        countdown = Timer(60, self.mainTimerComplete, (run,))
         countdown.start()
         start_time = time.time()
         if filename == 'none':
@@ -42,7 +55,7 @@ class DataThread:
                 with open(filename + file_type, 'a') as file:
                     while run:
                         if wait_time > 0:
-                            timer = Timer(wait_time, serialReadTimeout, (s, port))
+                            timer = Timer(wait_time, self.serialReadTimeout, (s, port))
                             timer.start()
                         # buffer = s.readline().decode('ascii')
                         buffer = s.readline()

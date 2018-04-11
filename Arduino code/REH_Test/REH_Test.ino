@@ -29,7 +29,7 @@ const int sampleSize = 1;
 
 void setup() {
   analogReference(EXTERNAL);
-  Serial.begin(57600);
+  Serial.begin(9600);
   // Commented out begin checks
   /*
     if (!gyro.begin(gyro.L3DS20_RANGE_250DPS))
