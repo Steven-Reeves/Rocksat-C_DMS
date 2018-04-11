@@ -17,6 +17,11 @@ class DataThread:
         self.run = False
 
     @staticmethod
+    def main_timer_complete(self, thread_id):
+        self.__run[thread_id] = False
+        print("[Thread {} timer] Countdown complete.".format(thread_id))
+
+    @staticmethod
     def serial_read_timeout(self, port, name):
         print("[Timeout] Device [{}] is unresponsive, flushing port.".format(name))
         port.flush()
@@ -39,7 +44,7 @@ class DataThread:
     @staticmethod
     def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
         num_failures = 0
-        countdown = Timer(60, main_timer_complete, (thread_id,))
+        countdown = Timer(60, target=self.main_timer_complete, args=(thread_id,))
         countdown.start()
         start_time = time.time()
         if filename == 'none':
@@ -49,16 +54,16 @@ class DataThread:
                 with open(filename + file_type, 'a') as file:
                     while self.__run[thread_id]:
                         if wait_time > 0:
-                            timer = Timer(wait_time, self.serial_read_rimeout, (s, port))
+                            timer = Timer(wait_time, target=self.serial_read_timeout, args=(s, port))
                             timer.start()
-                        # buffer = s.readline().decode('ascii')
-                        buffer = s.readline()
+                        buffer = s.readline().decode('ascii')
+                        #buffer = s.readline()
                         s.flush()
                         if wait_time > 0:
                             timer.cancel()
                         if buffer.split():
                             file.write(str(time.time() - start_time) + str(buffer))
-                            print("[{}] {}".format(port, str(buffer)))
+                            print("[{}] {}".format(port, buffer))
                         else:
                             print("[{}] No input".format(port))
                             num_failures += 1
@@ -106,7 +111,5 @@ class DataThread:
             finally:
                 print("[DataThread] All threads complete.")
 
-
-def main_timer_complete(self, thread_id):
-    self.__run[thread_id] = False
-    print("[Thread {} timer] Countdown complete.".format(thread_id))
+    def stop(self):
+        self.run = False
