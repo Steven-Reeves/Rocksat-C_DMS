@@ -11,18 +11,13 @@ class DataThread:
 
     def __init__(self):
         self.__threads = []
+        self.__run = []
         self.num_threads = 0
         self.started = False
         self.run = False
-        self.
 
-#    @staticmethod
-    def mainTimerComplete(self, run):
-        del run[0]
-        print("[times_up] Countdown complete.")
-
-#    @staticmethod
-    def serialReadTimeout(self, port, name):
+    @staticmethod
+    def serial_read_timeout(self, port, name):
         print("[Timeout] Device [{}] is unresponsive, flushing port.".format(name))
         port.flush()
         print("[Timeout] Port flushed")
@@ -42,10 +37,9 @@ class DataThread:
             self.started = False
 
     @staticmethod
-    def read_serial(self, port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
+    def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
         num_failures = 0
-        run = ['1']
-        countdown = Timer(60, self.mainTimerComplete, (run,))
+        countdown = Timer(60, main_timer_complete, (thread_id,))
         countdown.start()
         start_time = time.time()
         if filename == 'none':
@@ -53,9 +47,9 @@ class DataThread:
         try:
             with serial.Serial(port, baudrate, timeout=wait_time * 2, dsrdtr=True) as s:
                 with open(filename + file_type, 'a') as file:
-                    while run:
+                    while self.__run[thread_id]:
                         if wait_time > 0:
-                            timer = Timer(wait_time, self.serialReadTimeout, (s, port))
+                            timer = Timer(wait_time, self.serial_read_rimeout, (s, port))
                             timer.start()
                         # buffer = s.readline().decode('ascii')
                         buffer = s.readline()
@@ -70,7 +64,7 @@ class DataThread:
                             num_failures += 1
                             if num_failures > retries:
                                 print("Device [{}] has failed, exiting thread.".format(port))
-                                del run[0]
+                                self.__run[thread_id] = False
                                 # break
         except KeyboardInterrupt:
             print("[read_serial] KeyboardInterrupt")
@@ -80,26 +74,33 @@ class DataThread:
             print("[read_serial] Exit Code 0")
 
     # *vals will take any remaining values as a tuple
-    def add_thread(self, func, *vals):
+    def add_thread(self, *vals):
+        vals = [self.num_threads] + vals
         if not self.started:
-            t = Thread(target=func, args=vals)
+            t = Thread(target=self.read_serial, args=vals)
             self.__threads.append(t)
             self.num_threads += 1
         else:
             print("[add_thread] Cannot add threads while running.")
 
     def start(self):
+        if self.__threads:
+            self.run = True
         try:
             for t in self.__threads:
-                #t.daemon = True
                 t.start()
             self.started = True
-                # Create independent thread to monitor other threads
+            # Create independent thread to monitor other threads
             watch =  Thread(target=self.__watch_threads, args=(self,)).start()
-#            watch.start()
-#            watch.join()
+            watch.start()
+            watch.join()
         except KeyboardInterrupt:
             print("[DataThread] KeyboardInterrupt")
             raise KeyboardInterrupt
         finally:
             print("[DataThread] All threads complete.")
+
+
+def main_timer_complete(self, thread_id):
+    self.__run[thread_id] = False
+    print("[Thread {} timer] Countdown complete.".format(thread_id))
