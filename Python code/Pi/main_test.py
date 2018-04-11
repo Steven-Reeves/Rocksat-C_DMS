@@ -7,7 +7,7 @@
 #               This was more for my own experimentation and potential future use
 #               than for use in this year's (2018) Rocksat-C program.
 
-from DataThread import DataThread
+from DataThread_Test import DataThread
 from serial_func import read_serial
 import sniff
 
