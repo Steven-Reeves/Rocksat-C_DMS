@@ -17,7 +17,7 @@ try:
     if len(portList) > 0:
         dt = DataThread()
         for port in portList:
-            dt.add_thread(read_serial, '/dev/'+port, 9600, port)
+            dt.add_thread('/dev/'+port, 57600, port)
             print("Connected to {}.".format(port))
         dt.start()
 except KeyboardInterrupt:
