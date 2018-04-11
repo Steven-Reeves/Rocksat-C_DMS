@@ -19,9 +19,9 @@ def serialReadTimeout(port, name):
     port.flush()
     print("[Timeout] Port flushed")
 
-def read_serial(stop, port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
+def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
     num_failures = 0
-    run = ['true']
+    run = ['1']
     countdown = Timer(60, mainTimerComplete, (run,))
     countdown.start()
     if filename == 'none':
@@ -29,11 +29,11 @@ def read_serial(stop, port, baudrate=9600, filename='none', file_type='.txt', wa
     try:
         with serial.Serial(port, baudrate, timeout=wait_time*2, dsrdtr=True) as s:
             with open(filename + file_type, 'a') as file:
-                while run and stop[0] != 'Stop':
+                while run:
                     if wait_time > 0:
                         timer = Timer(wait_time, serialReadTimeout, (s, port))
                         timer.start()
-                        buffer = s.readline().decode('ascii')
+                    buffer = s.readline().decode('ascii')
                     if wait_time > 0:
                         timer.cancel()
                     if buffer.split():

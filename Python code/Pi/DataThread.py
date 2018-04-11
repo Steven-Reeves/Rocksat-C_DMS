@@ -13,7 +13,6 @@ class DataThread:
         self.__threads = []
         self.num_threads = 0
         self.started = False
-        self.stop = []
 
     @staticmethod
     def __watch_threads(self):
@@ -33,8 +32,7 @@ class DataThread:
     # *vals will take any remaining values as a tuple
     def add_thread(self, func, *vals):
         if not self.started:
-            self.stop.append(vals)
-            t = Thread(target=func, args=self.stop)
+            t = Thread(target=func, args=vals)
             self.__threads.append(t)
             self.num_threads += 1
         else:
@@ -53,6 +51,5 @@ class DataThread:
         except KeyboardInterrupt:
             print("[DataThread] KeyboardInterrupt")
             raise KeyboardInterrupt
-            self.stop.append('Stop')
         finally:
             print("[DataThread] All threads complete.")
