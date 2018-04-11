@@ -81,26 +81,30 @@ class DataThread:
         if not self.started:
             t = Thread(target=self.read_serial, args=new_values)
             self.__threads.append(t)
+            self.__run.append(False)
             self.num_threads += 1
         else:
             print("[add_thread] Cannot add threads while running.")
 
     def start(self):
         if self.__threads:
+            index = 0
             self.run = True
-        try:
-            for t in self.__threads:
-                t.start()
-            self.started = True
-            # Create independent thread to monitor other threads
-            watch =  Thread(target=self.__watch_threads, args=(self,)).start()
-            watch.start()
-            watch.join()
-        except KeyboardInterrupt:
-            print("[DataThread] KeyboardInterrupt")
-            raise KeyboardInterrupt
-        finally:
-            print("[DataThread] All threads complete.")
+            try:
+                for t in self.__threads:
+                    self.__run[index] = True
+                    t.start()
+                    index += 1
+                self.started = True
+                # Create independent thread to monitor other threads
+                watch =  Thread(target=self.__watch_threads, args=(self,)).start()
+                #watch.start()
+                watch.join()
+            except KeyboardInterrupt:
+                print("[DataThread] KeyboardInterrupt")
+                raise KeyboardInterrupt
+            finally:
+                print("[DataThread] All threads complete.")
 
 
 def main_timer_complete(self, thread_id):
