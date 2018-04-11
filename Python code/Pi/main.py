@@ -14,6 +14,6 @@ try:
 	#dt.add_thread(read_serial, "/dev/ttyUSB0", 9600, "Test-2")
 	#dt.add_thread(read_serial, "/dev/ttyUSB1", 9600, "Test-3")
 	#dt.add_thread(read_serial, "/dev/ttyUSB2", 9600, "Test-4")
-    dt.start(True)
+    dt.start()
 except KeyboardInterrupt:
     print("Exit main")
