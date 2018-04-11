@@ -5,6 +5,7 @@
 # Overview:     DataThread class that manages simultaneous threads
 
 from threading import Thread
+from StopThread import StopThread
 import time
 
 class DataThread:
@@ -32,16 +33,27 @@ class DataThread:
     # *vals will take any remaining values as a tuple
     def add_thread(self, func, *vals):
         if not self.started:
-            t = Thread(target=func, args=vals)
+            t = StopThread(target=func, args=vals)
             self.__threads.append(t)
             self.num_threads += 1
         else:
             print("[add_thread] Cannot add threads while running.")
 
     def start(self, empty=False):
-        for t in self.__threads:
-            t.start()
-        self.started = True
-        if empty:
-            # Create independent thread to monitor other threads
-            Thread(target=self.__watch_threads, args=(self,)).start()
+        try:
+            for t in self.__threads:
+                #t.daemon = True
+                t.start()
+            self.started = True
+                # Create independent thread to monitor other threads
+            watch =  Thread(target=self.__watch_threads, args=(self,))
+            watch.start()
+            watch.join()
+        except KeyboardInterrupt:
+            print("[DataThread] KeyboardInterrupt")
+            raise KeyboardInterrupt
+            for t in self.__threads:
+                if not t.is_stopped():
+                    t.stop()
+        finally:
+            print("[DataThread] All threads complete.")
