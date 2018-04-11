@@ -36,12 +36,13 @@ def read_serial(port, baudrate=9600, filename='none', file_type='.txt', wait_tim
                         timer.start()
                     #buffer = s.readline().decode('ascii')
                     buffer = s.readline()
+                    buffer = buffer.decode('ascii')
                     s.flush()
                     if wait_time > 0:
                         timer.cancel()
                     if buffer.split():
                         file.write(str(time.time() - start_time) + str(buffer))
-                        print("[{}] {}".format(port, str(buffer)))
+                        print("[{}] {} {}".format(port, str(time.time() - start_time), str(buffer)))
                     else:
                         print("[{}] No input".format(port))
                         num_failures += 1
