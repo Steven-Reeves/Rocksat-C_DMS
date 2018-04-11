@@ -33,7 +33,8 @@ class DataThread:
     # *vals will take any remaining values as a tuple
     def add_thread(self, func, *vals):
         if not self.started:
-            t = Thread(target=func, args=(stop, vals))
+            self.stop.append(vals)
+            t = Thread(target=func, args=self.stop)
             self.__threads.append(t)
             self.num_threads += 1
         else:

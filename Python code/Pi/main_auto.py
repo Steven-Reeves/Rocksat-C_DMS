@@ -19,6 +19,6 @@ try:
         for port in portList:
             dt.add_thread(read_serial, '/dev/'+port, 57600, port)
             print("Connected to {}.".format(port))
-        dt.start(True)
+        dt.start()
 except KeyboardInterrupt:
     print("Exit main")
