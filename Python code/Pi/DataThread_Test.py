@@ -63,7 +63,7 @@ class DataThread:
                             timer.cancel()
                         if buffer.split():
                             time_lapsed = time.time() - start_time
-                            file.write(bytes(time_lapsed))
+                            file.write(time_lapsed)
                             file.write(buffer)
                             print("[{}] {} {}".format(port, str(time_lapsed), str(buffer)))
                         else:
