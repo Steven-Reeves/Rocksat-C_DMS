@@ -50,6 +50,7 @@ class DataThread:
             filename = port
         try:
             with serial.Serial(port, baudrate, timeout=wait_time * 2, dsrdtr=True) as s:
+                s.flush()
                 with open(filename + file_type, 'a') as file:
                     while self.run_list[thread_id]:
                         if wait_time > 0:
@@ -57,7 +58,7 @@ class DataThread:
                             timer.start()
                         # buffer = s.readline().decode('ascii')
                         buffer = s.readline()
-                        s.flush()
+                        #s.flush()
                         if wait_time > 0:
                             timer.cancel()
                         if buffer.split():
