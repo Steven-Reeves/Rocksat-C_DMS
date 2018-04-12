@@ -61,9 +61,9 @@ class DataThread:
                         if wait_time > 0:
                             timer.cancel()
                         if buffer.split():
-                            time_lapsed = str(time.time() - start_time)
-                            file.write(time_lapsed + str(buffer))
-                            print("[{}] {} {}".format(port, (time_lapsed, buffer)))
+                            time_lapsed = time.time() - start_time
+                            file.write(str(time_lapsed) + str(buffer))
+                            print("[{}] {} {}".format(port, str(time_lapsed), str(buffer)))
                         else:
                             print("[{}] No input".format(port))
                             num_failures += 1
