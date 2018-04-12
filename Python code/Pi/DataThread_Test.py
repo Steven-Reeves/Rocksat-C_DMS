@@ -27,8 +27,10 @@ class DataThread:
         print("[Timeout] Port flushed")
 
     def __watch_threads(self):
+        print("[Watcher] Activated")
         start_time = time.time()
         while self.__threads:
+            print("[Watcher] Watching")
             for t in self.__threads:
                 if not t.isAlive():
                     self.__threads.remove(t)
@@ -70,6 +72,7 @@ class DataThread:
                                 # break
         except KeyboardInterrupt:
             print("[read_serial] KeyboardInterrupt")
+            self.run_list[thread_id] = False
         # except:
         # print("[read_serial] Unhandled Exception")
         finally:
@@ -111,6 +114,8 @@ class DataThread:
                 print("[DataThread] All threads complete.")
 
     def stop(self):
+        print("[DataThread] stop function called.")
         self.run = False
         for flag in self.run_list:
             flag = False
+            print("[DataThread] Flag set to false.")
