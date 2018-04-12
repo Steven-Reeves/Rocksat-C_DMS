@@ -55,15 +55,15 @@ class DataThread:
                         if wait_time > 0:
                             timer = Timer(wait_time, self.serial_read_timeout, (s, port))
                             timer.start()
-                        buffer = s.readline().decode('ascii')
-                        # buffer = s.readline()
+                        # buffer = s.readline().decode('ascii')
+                        buffer = s.readline()
                         s.flush()
                         if wait_time > 0:
                             timer.cancel()
                         if buffer.split():
                             time_lapsed = str(time.time() - start_time)
                             file.write(time_lapsed + str(buffer))
-                            print("[{}] {} {}".format(port, time_lapsed, buffer))
+                            print("[{}] {} {}".format(port, (time_lapsed, buffer)))
                         else:
                             print("[{}] No input".format(port))
                             num_failures += 1
