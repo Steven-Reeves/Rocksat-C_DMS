@@ -26,7 +26,6 @@ class DataThread:
         port.flush()
         print("[Timeout] Port flushed")
 
-    @staticmethod
     def __watch_threads(self):
         start_time = time.time()
         while self.__threads:
