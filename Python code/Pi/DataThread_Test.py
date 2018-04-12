@@ -33,7 +33,6 @@ class DataThread:
            # print("[Watcher] Watching")
             for t in self.__threads:
                 if not t.isAlive():
-                    t.daemon = True
                     self.__threads.remove(t)
                     self.num_threads -= 1
             time.sleep(.01)
@@ -75,10 +74,12 @@ class DataThread:
         except KeyboardInterrupt:
             print("[read_serial] KeyboardInterrupt")
             self.run_list[thread_id] = False
+            countdown.cancel()
         # except:
         # print("[read_serial] Unhandled Exception")
         finally:
             print("[read_serial] Exit Code 0")
+            countdown.cancel()
 
     # *vals will take any remaining values as a tuple
     def add_thread(self, *values):
