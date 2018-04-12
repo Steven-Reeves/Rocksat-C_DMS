@@ -100,12 +100,13 @@ class DataThread:
                     index += 1
                 self.started = True
                 # Create independent thread to monitor other threads
-                watch = Thread(target=self.__watch_threads).start()
-                # watch.start()
-                # watch.join()
+                watch = Thread(target=self.__watch_threads)
+                watch.start()
+                watch.join()
             except KeyboardInterrupt:
                 print("[DataThread] KeyboardInterrupt")
-                raise KeyboardInterrupt
+                #raise KeyboardInterrupt
+                self.stop()
             finally:
                 print("[DataThread] All threads complete.")
 
