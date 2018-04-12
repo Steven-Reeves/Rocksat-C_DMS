@@ -85,7 +85,7 @@ class DataThread:
         if not self.started:
             t = Thread(target=self.read_serial, args=new_values)
             self.__threads.append(t)
-            self.__run.append(False)
+            self.run_list.append(False)
             self.num_threads += 1
         else:
             print("[add_thread] Cannot add threads while running.")
@@ -96,7 +96,7 @@ class DataThread:
             self.run = True
             try:
                 for t in self.__threads:
-                    self.__run[index] = True
+                    self.run_list[index] = True
                     t.start()
                     index += 1
                 self.started = True
@@ -112,3 +112,5 @@ class DataThread:
 
     def stop(self):
         self.run = False
+        for flag in self.run_list:
+            flag = False
