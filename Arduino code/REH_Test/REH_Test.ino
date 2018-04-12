@@ -110,7 +110,8 @@ void loop() {
   Serial.print("\t");
   Serial.print("Z:");
   Serial.print("\t");
-  Serial.println(zRaw);
+  Serial.print(zRaw);
+  Serial.print("\n\r");
   delay(100);
 
 }
