@@ -44,7 +44,7 @@ class DataThread:
     @staticmethod
     def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
         num_failures = 0
-        countdown = Timer(60, self.main_timer_complete, (thread_id,))
+        countdown = Timer(60, function=self.main_timer_complete, args=(thread_id,))
         countdown.start()
         start_time = time.time()
         if filename == 'none':
@@ -54,7 +54,7 @@ class DataThread:
                 with open(filename + file_type, 'a') as file:
                     while self.__run[thread_id]:
                         if wait_time > 0:
-                            timer = Timer(wait_time, self.serial_read_timeout, (s, port))
+                            timer = Timer(wait_time, function=self.serial_read_timeout, args=(s, port))
                             timer.start()
                         buffer = s.readline().decode('ascii')
                         #buffer = s.readline()
