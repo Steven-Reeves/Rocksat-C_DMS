@@ -7,7 +7,6 @@
 from threading import Thread, Timer
 import time, serial
 
-
 class DataThread:
 
     def __init__(self):
