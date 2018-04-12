@@ -118,6 +118,6 @@ class DataThread:
     def stop(self):
         print("[Stop] Call received.")
         self.run = False
-        for flag in self.run_list:
-            flag = False
+        for n in range(self.run_list):
+            self.run_list[n] = False
             print("[DataThread] Flag set to false.")
