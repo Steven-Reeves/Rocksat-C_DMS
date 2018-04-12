@@ -30,7 +30,7 @@ class DataThread:
         print("[Watcher] Activated")
         start_time = time.time()
         while self.__threads:
-            print("[Watcher] Watching")
+           # print("[Watcher] Watching")
             for t in self.__threads:
                 if not t.isAlive():
                     self.__threads.remove(t)
@@ -105,8 +105,8 @@ class DataThread:
                 self.started = True
                 # Create independent thread to monitor other threads
                 watch = Thread(target=self.__watch_threads)
-                watch.start()
                 watch.daemon = True
+                watch.start()
                 watch.join()
             except KeyboardInterrupt:
                 print("[DataThread] KeyboardInterrupt")
