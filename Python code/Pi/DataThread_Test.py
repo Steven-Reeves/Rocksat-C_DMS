@@ -35,6 +35,7 @@ class DataThread:
                 if not t.isAlive():
                     self.__threads.remove(t)
                     self.num_threads -= 1
+            time.sleep(.01)
         if not self.__threads:
             print("[Watcher] All threads complete.")
             print("[Watcher] Time to complete: " + str("%.2f" % (time.time() - start_time)))
@@ -110,11 +111,12 @@ class DataThread:
                 print("[DataThread] KeyboardInterrupt")
                 #raise KeyboardInterrupt
                 self.stop()
+                print("[DataThread] Stop() called")
             finally:
                 print("[DataThread] All threads complete.")
 
     def stop(self):
-        print("[DataThread] stop function called.")
+        print("[Stop] Call received.")
         self.run = False
         for flag in self.run_list:
             flag = False
