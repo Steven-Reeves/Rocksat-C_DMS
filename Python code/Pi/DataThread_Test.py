@@ -81,7 +81,8 @@ class DataThread:
     # *vals will take any remaining values as a tuple
     def add_thread(self, *values):
         arg_list = list(values)
-        arg_list[:0] = self.num_threads
+        insert = [self.num_threads]
+        arg_list[:0] = insert
         new_values = tuple(arg_list)
         if not self.started:
             t = Thread(target=self.read_serial, args=new_values)
