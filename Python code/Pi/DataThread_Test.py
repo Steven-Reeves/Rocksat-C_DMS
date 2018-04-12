@@ -33,6 +33,7 @@ class DataThread:
            # print("[Watcher] Watching")
             for t in self.__threads:
                 if not t.isAlive():
+                    t.daemon = True
                     self.__threads.remove(t)
                     self.num_threads -= 1
             time.sleep(.01)
