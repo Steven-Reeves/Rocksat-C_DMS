@@ -51,7 +51,7 @@ class DataThread:
         try:
             with serial.Serial(port, baudrate, timeout=wait_time * 2, dsrdtr=True) as s:
                 s.flush()
-                with open(filename + file_type, 'a') as file:
+                with open(filename + file_type, 'ab') as file:
                     while self.run_list[thread_id]:
                         if wait_time > 0:
                             timer = Timer(wait_time, self.serial_read_timeout, (s, port))
@@ -63,7 +63,8 @@ class DataThread:
                             timer.cancel()
                         if buffer.split():
                             time_lapsed = time.time() - start_time
-                            file.write(str(time_lapsed) + str(buffer))
+                            file.write(b"time_lapsed")
+                            file.write(buffer)
                             print("[{}] {} {}".format(port, str(time_lapsed), str(buffer)))
                         else:
                             print("[{}] No input".format(port))
