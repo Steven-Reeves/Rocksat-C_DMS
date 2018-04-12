@@ -111,7 +111,7 @@ void loop() {
   Serial.print("Z:");
   Serial.print("\t");
   Serial.println(zRaw);
-  delay(100);
+  delay(500);
 
 }
 

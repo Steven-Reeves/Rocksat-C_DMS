@@ -34,7 +34,7 @@ class DataThread:
                 if not t.isAlive():
                     self.__threads.remove(t)
                     self.num_threads -= 1
-            time.sleep(1)
+            time.sleep(2)
         if not self.__threads:
             print("[Watcher] All threads complete.")
             print("[Watcher] Time to complete: " + str("%.2f" % (time.time() - start_time)))
