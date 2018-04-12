@@ -107,7 +107,7 @@ class DataThread:
                 self.started = True
                 # Create independent thread to monitor other threads
                 watch = Thread(target=self.__watch_threads)
-                watch.daemon = True
+                #watch.daemon = True
                 watch.start()
                 watch.join()
             except KeyboardInterrupt:
