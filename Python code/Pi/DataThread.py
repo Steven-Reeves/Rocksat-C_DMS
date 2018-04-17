@@ -5,7 +5,9 @@
 # Overview:     DataThread class that manages simultaneous threads
 
 from threading import Thread, Timer
-import time, serial
+import time
+import serial
+
 
 class DataThread:
 
@@ -14,29 +16,25 @@ class DataThread:
         self.run_list = []
         self.num_threads = 0
         self.started = False
-        # self.run = False
 
     def main_timer_complete(self, thread_id):
         self.run_list[thread_id] = False
         print("[Thread {} timer] Countdown complete.".format(thread_id))
 
-    def reconnect(self, port, portname, thread_id):
-        print("[reconnect] Reconnecting to device {}".format(portname))
+    def reconnect(self, port, port_name, thread_id):
+        print("[reconnect] Reconnecting to device {}".format(port_name))
         port.close()
         while not port.is_open and self.run_list[thread_id]:
             try:
-                # print("[reconnect] Attempting to reopen device {}".format(portname))
                 port.open()
                 print("[reconnect] Connected!")
             except:
-                # pass
                 time.sleep(.25)
 
     def __watch_threads(self):
         print("[Watcher] Activated")
         start_time = time.time()
         while self.__threads:
-           # print("[Watcher] Watching")
             for t in self.__threads:
                 if not t.isAlive():
                     self.__threads.remove(t)
@@ -48,27 +46,26 @@ class DataThread:
             self.num_threads = 0
             self.started = False
 
-    def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt', wait_time=1, retries=1):
-        num_failures = 0
+    def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt'):
         countdown = Timer(60, self.main_timer_complete, (thread_id,))
         countdown.start()
         start_time = time.time()
         if filename == 'none':
             filename = port
         try:
-            with serial.Serial(port, baudrate, timeout=wait_time, dsrdtr=True) as s:
+            with serial.Serial(port, baudrate, timeout=1, dsrdtr=True) as s:
                 s.flush()
                 with open(filename + file_type, 'ab') as file:
                     while self.run_list[thread_id]:
                         try:
                             if s.is_open:
                                 buffer = s.readline()
-                            if buffer.split():
-                                time_lapsed = time.time() - start_time
-                                file.write(buffer)
-                                print("[{}] {} {}".format(filename, str("%2f" % time_lapsed), str(buffer)))
-                            else:
-                                print("[{}] 1 second of no input".format(filename))
+                                if buffer.split():
+                                    time_lapsed = time.time() - start_time
+                                    file.write(buffer)
+                                    print("[{}] {} {}".format(filename, str("%2f" % time_lapsed), str(buffer)))
+                                else:
+                                    print("[{}] 1 second of no input".format(filename))
                         except serial.SerialException:
                             self.reconnect(s, port, thread_id)
         except serial.SerialException:
@@ -81,7 +78,7 @@ class DataThread:
             print("[read_serial] Exit Code 0")
             countdown.cancel()
 
-    # *vals will take any remaining values as a tuple
+    # *values will take any remaining values as a tuple
     def add_thread(self, *values):
         arg_list = list(values)
         insert = [self.num_threads]
@@ -98,7 +95,6 @@ class DataThread:
     def start(self):
         if self.__threads:
             index = 0
-            # self.run = True
             try:
                 for t in self.__threads:
                     self.run_list[index] = True
