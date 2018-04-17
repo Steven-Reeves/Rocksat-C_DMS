@@ -14,16 +14,23 @@ class DataThread:
         self.run_list = []
         self.num_threads = 0
         self.started = False
-        self.run = False
+        # self.run = False
 
     def main_timer_complete(self, thread_id):
         self.run_list[thread_id] = False
         print("[Thread {} timer] Countdown complete.".format(thread_id))
 
-    def serial_read_timeout(self, port, name):
-        print("[Timeout] Device [{}] is unresponsive, flushing port.".format(name))
-        port.flush()
-        print("[Timeout] Port flushed")
+    def reconnect(self, port, portname, thread_id):
+        print("[reconnect] Reconnecting to device {}".format(portname))
+        port.close()
+        while not port.is_open and self.run_list[thread_id]:
+            try:
+                # print("[reconnect] Attempting to reopen device {}".format(portname))
+                port.open()
+                print("[reconnect] Connected!")
+            except:
+                # pass
+                time.sleep(.25)
 
     def __watch_threads(self):
         print("[Watcher] Activated")
@@ -41,7 +48,7 @@ class DataThread:
             self.num_threads = 0
             self.started = False
 
-    def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt', wait_time=2, retries=1):
+    def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt', wait_time=1, retries=1):
         num_failures = 0
         countdown = Timer(60, self.main_timer_complete, (thread_id,))
         countdown.start()
@@ -49,36 +56,27 @@ class DataThread:
         if filename == 'none':
             filename = port
         try:
-            with serial.Serial(port, baudrate, timeout=wait_time * 2, dsrdtr=True) as s:
+            with serial.Serial(port, baudrate, timeout=wait_time, dsrdtr=True) as s:
                 s.flush()
                 with open(filename + file_type, 'ab') as file:
                     while self.run_list[thread_id]:
-                        if wait_time > 0:
-                            timer = Timer(wait_time, self.serial_read_timeout, (s, port))
-                            timer.start()
-                        # buffer = s.readline().decode('ascii')
-                        buffer = s.readline()
-                        #s.flush()
-                        if wait_time > 0:
-                            timer.cancel()
-                        if buffer.split():
-                            time_lapsed = time.time() - start_time
-                            #file.write(str(time_lapsed))
-                            file.write(buffer)
-                            print("[{}] {} {}".format(port, str(time_lapsed), str(buffer)))
-                        else:
-                            print("[{}] No input".format(port))
-                            num_failures += 1
-                            if num_failures > retries:
-                                print("Device [{}] has failed, exiting thread.".format(port))
-                                self.run_list[thread_id] = False
-                                # break
+                        try:
+                            if s.is_open:
+                                buffer = s.readline()
+                            if buffer.split():
+                                time_lapsed = time.time() - start_time
+                                file.write(buffer)
+                                print("[{}] {} {}".format(filename, str("%2f" % time_lapsed), str(buffer)))
+                            else:
+                                print("[{}] 1 second of no input".format(filename))
+                        except serial.SerialException:
+                            self.reconnect(s, port, thread_id)
+        except serial.SerialException:
+            self.reconnect(s, port, thread_id)
         except KeyboardInterrupt:
             print("[read_serial] KeyboardInterrupt")
             self.run_list[thread_id] = False
             countdown.cancel()
-        # except:
-        # print("[read_serial] Unhandled Exception")
         finally:
             print("[read_serial] Exit Code 0")
             countdown.cancel()
@@ -100,7 +98,7 @@ class DataThread:
     def start(self):
         if self.__threads:
             index = 0
-            self.run = True
+            # self.run = True
             try:
                 for t in self.__threads:
                     self.run_list[index] = True
@@ -109,12 +107,10 @@ class DataThread:
                 self.started = True
                 # Create independent thread to monitor other threads
                 watch = Thread(target=self.__watch_threads)
-                #watch.daemon = True
                 watch.start()
                 watch.join()
             except KeyboardInterrupt:
                 print("[DataThread] KeyboardInterrupt")
-                #raise KeyboardInterrupt
                 self.stop()
                 print("[DataThread] Stop() called")
             finally:
@@ -122,7 +118,7 @@ class DataThread:
 
     def stop(self):
         print("[Stop] Call received.")
-        self.run = False
+        # self.run = False
         for n in range(len(self.run_list)):
             self.run_list[n] = False
             print("[DataThread] Flag set to false.")
