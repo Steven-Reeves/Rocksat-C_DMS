@@ -1,6 +1,6 @@
 # Author:       Andy Horn
 # Date:         4/4/2018
-# Modified:     4/15/2018
+# Modified:     4/18/2018
 # Filename:     DataThread.py
 # Overview:     DataThread class that manages simultaneous threads
 
@@ -19,7 +19,7 @@ class DataThread:
 
     def main_timer_complete(self, thread_id):
         self.run_list[thread_id] = False
-        print("[Thread {} timer] Countdown complete.".format(thread_id))
+        print("[Thread {} timer] Countdown complete".format(thread_id))
 
     def reconnect(self, port, port_name, thread_id):
         print("[reconnect] Reconnecting to device {}".format(port_name))
@@ -47,13 +47,14 @@ class DataThread:
             self.started = False
 
     def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt'):
+        exit_code = 0
         countdown = Timer(60, self.main_timer_complete, (thread_id,))
         countdown.start()
         start_time = time.time()
         if filename == 'none':
             filename = port
         try:
-            with serial.Serial(port, baudrate, timeout=1, dsrdtr=True) as s:
+            with serial.Serial(port, baudrate, timeout=3, dsrdtr=True) as s:
                 s.flush()
                 with open(filename + file_type, 'ab') as file:
                     while self.run_list[thread_id]:
@@ -65,17 +66,18 @@ class DataThread:
                                     file.write(buffer)
                                     print("[{}] {} {}".format(filename, str("%2f" % time_lapsed), str(buffer)))
                                 else:
-                                    print("[{}] 1 second of no input".format(filename))
+                                    print("[{}] 3 seconds no input".format(filename))
                         except serial.SerialException:
                             self.reconnect(s, port, thread_id)
-        except serial.SerialException:
-            self.reconnect(s, port, thread_id)
         except KeyboardInterrupt:
-            print("[read_serial] KeyboardInterrupt")
-            self.run_list[thread_id] = False
-            countdown.cancel()
+            print("[{}] KeyboardInterrupt".format(port))
+            exit_code = 1
+        except serial.SerialException:
+            print("[{}] Unable to connect".format(port))
+            exit_code = 2
         finally:
-            print("[read_serial] Exit Code 0")
+            print("[{}] Exit Code {}".format(port, exit_code))
+            self.run_list[thread_id] = False
             countdown.cancel()
 
     # *values will take any remaining values as a tuple
@@ -104,7 +106,7 @@ class DataThread:
                 # Create independent thread to monitor other threads
                 watch = Thread(target=self.__watch_threads)
                 watch.start()
-                watch.join()
+                watch.join() # Keep main process alive as long as child threads are active
             except KeyboardInterrupt:
                 print("[DataThread] KeyboardInterrupt")
                 self.stop()
