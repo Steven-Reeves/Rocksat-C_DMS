@@ -1,5 +1,11 @@
 /*
- * Geiger-Muller radiation detection on an Arduino Micro.
+ * Author:  Andy Horn
+ * Date:    5/2/18
+ * 
+ * Geiger-Muller radiation detection on an Arduino Micro for Rocksat-C 2017.
+ * Set up for 4 GM tubes to write to an SD card with the total number of hits for each tube,
+ * along with sending the count out on the serial port.
+ * 
  * Interrupt pins: 0 (RX), 1 (TX), 2, 3, 7
  * We will use the RX and TX pins as interrupts since all serial communication will take place through the USB port.
  */
@@ -8,7 +14,7 @@
   #include <SD.h> // include the SD card library
 
 void setup() {
-  // Set up all 4 of the interrupt pins.
+  // interrupt pins setup:
   const int tube_one_interrupt = 0;
   const int tube_two_interrupt = 1;
   const int tube_three_interrupt = 2;
@@ -23,15 +29,18 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(tube_two_interrupt), hit_two, HIGH);
   attachInterrupt(digitalPinToInterrupt(tube_three_interrupt), hit_three, HIGH);
   attachInterrupt(digitalPinToInterrupt(tube_four_interrupt), hit_four, HIGH);
-  
+
+  // counter set up:
   static unsigned long timestamp = 0; // maximize counting range (0 - 4,294,967,295)
   static unsigned long tube_one_hits = 0;
   static unsigned long tube_two_hits = 0;
   static unsigned long tube_three_hits = 0;
   static unsigned long tube_four_hits = 0;
   
-  static File file;
-  SD.begin(); // use the cs select pin if necessary
+  static File file; // may not be necessary
+
+  while (!SD.begin()) {} // force the Arduino to open the SD card.
+  // SD.begin(); // use the cs select pin if necessary
 
   /*
    * SD card attached to SPI bus as follows:
@@ -58,7 +67,7 @@ void hit_one()
   // file = SD.open("tube01.txt", FILE_WRITE);
   // if (file)
   // {
-  //    file.writeln("[Tube 01]\tHits: %d\tTime: %d", tube_one_hits, timestamp);
+  //    file.writeln("[Tube 01]\tHits: %f\tTime: %d", tube_one_hits, (timestamp / 100));
   //    file.close();
   // }
   
@@ -73,7 +82,7 @@ void hit_two()
   // file = SD.open("tube02.txt", FILE_WRITE);
   // if (file)
   // {
-  //    file.writeln("[Tube 02]\tHits: %d\tTime: %d", tube_two_hits, timestamp);
+  //    file.writeln("[Tube 02]\tHits: %d\tTime: %f", tube_two_hits, (timestamp / 100));
   //    file.close();
   // }
 }
@@ -87,7 +96,7 @@ void hit_three()
   // file = SD.open("tube03.txt", FILE_WRITE);
   // if (file)
   // {
-  //    file.writeln("[Tube 03]\tHits: %d\tTime: %d", tube_three_hits, timestamp);
+  //    file.writeln("[Tube 03]\tHits: %d\tTime: %f", tube_three_hits, (timestamp / 100));
   //    file.close();
   // }
 }
@@ -101,7 +110,7 @@ void hit_four()
   // file = SD.open("tube04.txt", FILE_WRITE);
   // if (file)
   // {
-  //    file.writeln("[Tube 04]\tHits: %d\tTime: %d", tube_four_hits, timestamp);
+  //    file.writeln("[Tube 04]\tHits: %d\tTime: %f", tube_four_hits, (timestamp / 100));
   //    file.close();
   // }
 }
