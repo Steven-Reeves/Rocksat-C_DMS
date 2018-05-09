@@ -12,8 +12,8 @@
 
   #include <SPI.h>
   #include <SD.h> // include the SD card library
-
-  unsigned long timestamp; // maximize counting range (0 - 4,294,967,295)
+  // Using unsigned longs to maximize counting range ( 0 - 4,294,967,295)
+  unsigned long timestamp; // Counted in hundredths of a second, this will give us nearly 500 days.
   unsigned long tube_one_hits;
   unsigned long tube_two_hits;
   unsigned long tube_three_hits;
@@ -23,10 +23,10 @@
 
 void setup() {
   // interrupt pins setup:
-  const int tube_one_interrupt = 0;
-  const int tube_two_interrupt = 1;
-  const int tube_three_interrupt = 2;
-  const int tube_four_interrupt = 3;
+  const short tube_one_interrupt = 0;
+  const short tube_two_interrupt = 1;
+  const short tube_three_interrupt = 2;
+  const short tube_four_interrupt = 3;
 
   pinMode(tube_one_interrupt, INPUT);
   pinMode(tube_two_interrupt, INPUT);
@@ -62,11 +62,13 @@ void setup() {
 void loop() {
   delay(10);
   timestamp++; // timestamp is counting hundredths of a second
-  // Arduino will wait for interrupt events to call functions below:
+  // Arduino will wait for interrupt events to call functions below,
+  // no other real business is performed.
 }
 
 void PrintToSerial(int tube, unsigned long hits, unsigned long timestamp)
 {
+  // "[Tube 0x]   Hits: xx    Time: xx.xx"
   Serial.print("[Tube 0");
   Serial.print(tube);
   Serial.print("]\tHits: ");
@@ -87,9 +89,10 @@ void PrintToSerial(int tube, unsigned long hits, unsigned long timestamp)
 
 void PrintToFile(int tube, unsigned long hits, unsigned long timestamp)
 {
-  File file;
+  // "tube0x.txt - Hits: xxx   Time: xx.xx"
   
-  switch(tube)
+  File file;
+    switch(tube)
   {
     case 1: file = SD.open("tube01.txt", FILE_WRITE);
       break;
