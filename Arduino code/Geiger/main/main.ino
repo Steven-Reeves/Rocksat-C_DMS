@@ -13,6 +13,15 @@
   #include <SPI.h>
   #include <SD.h> // include the SD card library
 
+
+  static unsigned long timestamp; // maximize counting range (0 - 4,294,967,295)
+  static unsigned long tube_one_hits;
+  static unsigned long tube_two_hits;
+  static unsigned long tube_three_hits;
+  static unsigned long tube_four_hits;
+
+  File file;
+
 void setup() {
   // interrupt pins setup:
   const int tube_one_interrupt = 0;
@@ -31,16 +40,15 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(tube_four_interrupt), hit_four, HIGH);
 
   // counter set up:
-  static unsigned long timestamp = 0; // maximize counting range (0 - 4,294,967,295)
-  static unsigned long tube_one_hits = 0;
-  static unsigned long tube_two_hits = 0;
-  static unsigned long tube_three_hits = 0;
-  static unsigned long tube_four_hits = 0;
-  
-  static File file; // may not be necessary
+  timestamp = 0; // maximize counting range (0 - 4,294,967,295)
+  tube_one_hits = 0;
+  tube_two_hits = 0;
+  tube_three_hits = 0;
+  tube_four_hits = 0;
 
   while (!SD.begin()) {} // force the Arduino to open the SD card.
-  // SD.begin(); // use the cs select pin if necessary
+  Serial.println("SD Card Opened!");
+ // use the cs select pin if necessary
 
   /*
    * SD card attached to SPI bus as follows:
@@ -60,11 +68,11 @@ void loop() {
 
 void hit_one()
 {
-  // tube_one_hits += 1;
+  tube_one_hits += 1;
   // print to serial that tube 1 received a hit of radiation.
-  // Serial.println("[Tube 01]\tHits: %d", tube_one_hits);
+  Serial.println("[Tube 01]\tHits: " + tube_one_hits);
   // write to SD card that tube 1 received a hit of radiation.
-  // file = SD.open("tube01.txt", FILE_WRITE);
+  file = SD.open("tube01.txt", FILE_WRITE);
   // if (file)
   // {
   //    file.writeln("[Tube 01]\tHits: %f\tTime: %d", tube_one_hits, (timestamp / 100));
@@ -75,11 +83,11 @@ void hit_one()
 
 void hit_two()
 {
-  // tube_two_hits += 1;
+  tube_two_hits += 1;
   // print to serial that tube 2 received a hit of radiation.
-  // Serial.println("[Tube 02]\tHits: %d", tube_two_hits);
+  Serial.println("[Tube 02]\tHits: " + tube_two_hits);
   // write to SD card that tube 2 received a hit of radiation.
-  // file = SD.open("tube02.txt", FILE_WRITE);
+  file = SD.open("tube02.txt", FILE_WRITE);
   // if (file)
   // {
   //    file.writeln("[Tube 02]\tHits: %d\tTime: %f", tube_two_hits, (timestamp / 100));
@@ -89,11 +97,11 @@ void hit_two()
 
 void hit_three()
 {
-  // tube_three_hits += 1;
+  tube_three_hits += 1;
   // print to serial that tube 3 received a hit of radiation.
-  // Serial.println("[Tube 03]\tHits: %d", tube_three_hits);
+  Serial.println("[Tube 03]\tHits: " + tube_three_hits);
   // write to SD card that tube 3 received a hit of radiation.
-  // file = SD.open("tube03.txt", FILE_WRITE);
+  file = SD.open("tube03.txt", FILE_WRITE);
   // if (file)
   // {
   //    file.writeln("[Tube 03]\tHits: %d\tTime: %f", tube_three_hits, (timestamp / 100));
@@ -103,11 +111,11 @@ void hit_three()
 
 void hit_four()
 {
-  // tube_four_hits += 1;
+  tube_four_hits += 1;
   // print to serial that tube 4 received a hit of radiation.
-  // Serial.println("[Tube 04]\tHits: %d", tube_four_hits);
+  Serial.println("[Tube 04]\tHits: " + tube_four_hits);
   // write to SD card that tube 4 received a hit of radiation.
-  // file = SD.open("tube04.txt", FILE_WRITE);
+  file = SD.open("tube04.txt", FILE_WRITE);
   // if (file)
   // {
   //    file.writeln("[Tube 04]\tHits: %d\tTime: %f", tube_four_hits, (timestamp / 100));
