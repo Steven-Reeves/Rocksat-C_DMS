@@ -113,7 +113,6 @@ void loop() {
       Serial.println("Running...");
       testOut = 0;
     }
-    */
 }
 
 void PrintToSerial(String printMe)
