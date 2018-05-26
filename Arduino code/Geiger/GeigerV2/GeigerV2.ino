@@ -2,10 +2,10 @@
 #include <SD.h>
 
 const short chipSelect = 10;
-const short tubeOneIntPin = 3;
-const short tubeTwoIntPin = 2;
-const short tubeThreeIntPin = 7;
-const short tubeFourIntPin = 1; // This is the RX pin.
+const short tubeOneIntPin = 3; // unshielded
+const short tubeTwoIntPin = 2; // FE3O4
+const short tubeThreeIntPin = 7; // SRCO3
+const short tubeFourIntPin = 0; // This is the RX pin. WAX
 
 unsigned int tubeOneHits = 0;
 unsigned long tubeOneTotal = 0;
@@ -46,11 +46,12 @@ void setup() {
   Serial.begin(57600);
   while (!Serial);
   Serial.println("Serial open!");
-
+  
+  pinMode(chipSelect, OUTPUT);
   if (!SD.begin(chipSelect))
   {
     Serial.println("Failed to initialize SD card.");
-    while(1);
+    //while(1);
   }
   
   pinMode(tubeOneIntPin, INPUT_PULLUP);
@@ -74,7 +75,7 @@ void loop() {
       tubeOneTotal += tubeOneHits;
       tubeOneHits = 0;
       timestamp = millis();
-      printOut = "Time: " + String(timestamp) + "\tTube 1 Hits: " + String(tubeOneTotal);
+      printOut = String(timestamp) + ",unshielded," + String(tubeOneTotal);
       PrintToSerial(printOut);
       // WriteToSD(printOut);
     }
@@ -83,7 +84,7 @@ void loop() {
       tubeTwoTotal += tubeTwoHits;
       tubeTwoHits = 0;
       timestamp = millis();
-      printOut = "Time: " + String(timestamp) + "\tTube 2 Hits: " + String(tubeTwoTotal);
+      printOut = String(timestamp) + ",fe3o4," + String(tubeTwoTotal);
       PrintToSerial(printOut);
       // WriteToSD(printOut);
     }
@@ -92,7 +93,7 @@ void loop() {
       tubeThreeTotal += tubeThreeHits;
       tubeThreeHits = 0;
       timestamp = millis();
-      printOut = "Time: " + String(timestamp) + "\tTube 3 Hits: " + String(tubeThreeTotal);
+      printOut = String(timestamp) + ",srco3," + String(tubeThreeTotal);
       PrintToSerial(printOut);
       // WriteToSD(printOut);
     }
@@ -101,18 +102,18 @@ void loop() {
       tubeFourTotal += tubeFourHits;
       tubeFourHits = 0;
       timestamp = millis();
-      printOut = "Time: " + String(timestamp) + "\tTube 4 Hits: " + String(tubeFourTotal);
+      printOut = String(timestamp) + ",wax," + String(tubeFourTotal);
       PrintToSerial(printOut);
       // WriteToSD(printOut);
     }
 
     /* For Debugging: */
-    testOut++;
-    if (testOut > 500000)
-    {
-      Serial.println("Running...");
-      testOut = 0;
-    }
+   // testOut++;
+   // if (testOut > 500000)
+   // {
+   //   Serial.println("Running...");
+   //   testOut = 0;
+   // }
 }
 
 void PrintToSerial(String printMe)
