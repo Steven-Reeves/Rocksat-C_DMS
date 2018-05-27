@@ -6,6 +6,8 @@ const short tubeOneIntPin = 3; // unshielded
 const short tubeTwoIntPin = 2; // FE3O4
 const short tubeThreeIntPin = 7; // SRCO3
 const short tubeFourIntPin = 0; // This is the RX pin. WAX
+short SdEnable = 0;
+short SerialEnable = 1;
 
 unsigned int tubeOneHits = 0;
 unsigned long tubeOneTotal = 0;
@@ -44,15 +46,23 @@ void TubeFour()
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(57600);
-  while (!Serial);
-  Serial.println("Serial open!");
-  
+  short i = 0;
+  while (!Serial && i < 1000)
+  {
+    i++;
+  }
+  if(!Serial)
+  {
+    SerialEnable = 0;
+  }
   pinMode(chipSelect, OUTPUT);
-  if (!SD.begin(chipSelect))
+  delay(10);
+  while (!SD.begin(chipSelect))
   {
     Serial.println("Failed to initialize SD card.");
-    //while(1);
   }
+    Serial.println("SD Card initialized!");
+    SdEnable = 1;
   
   pinMode(tubeOneIntPin, INPUT_PULLUP);
   pinMode(tubeTwoIntPin, INPUT_PULLUP);
@@ -77,7 +87,10 @@ void loop() {
       timestamp = millis();
       printOut = String(timestamp) + ",unshielded," + String(tubeOneTotal);
       PrintToSerial(printOut);
-      // WriteToSD(printOut);
+      if (SdEnable)
+      {
+        WriteToSD(printOut);
+      } 
     }
     if (tubeTwoHits > 0)
     {
@@ -86,7 +99,10 @@ void loop() {
       timestamp = millis();
       printOut = String(timestamp) + ",fe3o4," + String(tubeTwoTotal);
       PrintToSerial(printOut);
-      // WriteToSD(printOut);
+      if (SdEnable)
+      {
+        WriteToSD(printOut);
+      }
     }
     if (tubeThreeHits > 0)
     {
@@ -95,7 +111,10 @@ void loop() {
       timestamp = millis();
       printOut = String(timestamp) + ",srco3," + String(tubeThreeTotal);
       PrintToSerial(printOut);
-      // WriteToSD(printOut);
+      if (SdEnable)
+      {
+        WriteToSD(printOut);
+      }
     }
     if (tubeFourHits > 0)
     {
@@ -104,7 +123,10 @@ void loop() {
       timestamp = millis();
       printOut = String(timestamp) + ",wax," + String(tubeFourTotal);
       PrintToSerial(printOut);
-      // WriteToSD(printOut);
+      if (SdEnable)
+      {
+        WriteToSD(printOut);
+      }
     }
 
     /* For Debugging: */
@@ -123,7 +145,7 @@ void PrintToSerial(String printMe)
 
 void WriteToSD(String writeMe)
 {
-  File dataFile = SD.open("geiger_log.txt", FILE_WRITE);
+  File dataFile = SD.open("geiger.txt", FILE_WRITE);
   if (dataFile)
   {
     dataFile.println(writeMe);

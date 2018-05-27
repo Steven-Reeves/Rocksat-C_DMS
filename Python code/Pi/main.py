@@ -13,8 +13,8 @@ dt = DataThread()
 # dt.add_thread("/dev/ttyACM1", 57600, "Test-2")
 
 # Tests for USB hub connected to Windows PC:
-dt.add_thread("COM4", 57600, "Delay500")
-dt.add_thread("COM5", 57600, "NoDelay")
+# dt.add_thread("COM4", 57600, "Delay500")
+dt.add_thread("COM7", 57600, "GeigerTest")
 
 # Tests for USB hub local to Steven's pi:
 # dt.add_thread("/dev/ttyACM0", 57600, "Test-1")
