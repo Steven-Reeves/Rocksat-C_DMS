@@ -173,8 +173,12 @@ void InitSd()
 void InitSerial()
 {
   short i = 0;
-  Serial.begin(BAUDRATE);
-  while (!Serial && i++ < 100) { delay(10); } // Try to open the serial port for up to 1 second.
+  //Serial.begin(BAUDRATE);
+  while (!Serial && i++ < 10) 
+    { 
+      Serial.begin(BAUDRATE);
+      delay(100);      
+    } // Try to open the serial port for up to 1 second.
 
   if(Serial)
   {
