@@ -3,7 +3,7 @@
 
 /************* VARIABLE SET UP *************/
 
-#define BAUDRATE          57600 // Serial baudrate
+#define BAUDRATE          9600 // Serial baudrate
 #define chipSelect        10    // Chip select pin for SD card
 #define tubeOneIntPin     3     // Unshielded tube
 #define tubeTwoIntPin     2     // FE3O4 shielded tube
