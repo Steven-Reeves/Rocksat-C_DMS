@@ -1,5 +1,39 @@
+/*
+ * Authors:     Andrew Horn, Steven Reeves
+ * Modified:    6/1/18
+ * Filename:    GeigerV2.ino
+ * 
+ * Overview:    This code will be used in the 2018 Rocksat-C program for counting the number of times
+ *              four different Geiger-Muller tubes are hit with radiation while in space. Three tubes 
+ *              are each shielded with different materials, while one is left unshielded for control.
+ *              
+ *              Each tube is connected to an interrupt, held high and driven low. On the falling edge 
+ *              of a signal drop an interrupt method is triggered which increments an intermediate counter,
+ *              each tube has its own counter, along with a totalHits counter.
+ *              
+ *              During the main program loop the intermediate counters are added into the totalHits counters 
+ *              and then reset to zero (0). Upon changes in the number of hits, data is printed to a serial
+ *              connection and to an SD card in the form of comma-separated values:
+ *              
+ *                  (int)timestamp,(int)total_number_of_hits,(String)shielding_material
+ *                  
+ *              This program runs from startup until the Arduino loses power.
+ */
+
 #include <SPI.h>
 #include <SD.h>
+
+/*
+ * SD card setup:
+ * Unshielded Geiger tube on pin 3
+ * FE3O4-shielded Geiger tube on pin 2
+ * SRCO3-shielded Geiger tube on pin 7
+ * Wax-shielded Geiger tube on pin 0 <- This is the RX pin, but since the Arduino will not be
+ *                                      receiving any data over RX/TX or USB during operation 
+ *                                      we are safe to use it for the interrupt.
+ *                                      
+ * Chip select on pin 10, this will activate the SD card breakout board.
+ */
 
 /************* VARIABLE SET UP *************/
 
@@ -96,7 +130,7 @@ void UpdateCount(unsigned long & totalHits, unsigned int & newHits, String shiel
   
   if (serialEnable)
   {
-    // Ff serial port is open, print the message to serial.
+    // If serial port is open, print the message to serial.
     PrintToSerial(printOut);
   }
   if (sdEnable)
@@ -108,7 +142,7 @@ void UpdateCount(unsigned long & totalHits, unsigned int & newHits, String shiel
 
 /************* PRINT FUNCTIONS *************/
 
-// Write string to serial port
+// Write printMe string to the serial port.
 void PrintToSerial(String &printMe)
 {
   if (serialEnable)
@@ -126,7 +160,7 @@ void WriteToSD(String &writeMe)
   File dataFile = SD.open("geiger.txt", FILE_WRITE); // open data file
   if (dataFile)
   {
-    // If the file is open, write data and close the file.
+    // If the file is open, write the writeMe string and close the file.
     dataFile.println(writeMe);
     dataFile.close();
   }
@@ -134,7 +168,7 @@ void WriteToSD(String &writeMe)
   {
     if (serialEnable && debug)
     {
-      // If the serial port is open and debug mode is on, print a failure message.
+      // If the file is not open, the serial port is open, and debug mode is on, print a failure message.
       Serial.println("Unable to write to SD card.");  
     }
   }
@@ -142,7 +176,7 @@ void WriteToSD(String &writeMe)
 
 /************* INITIALIZATION FUNCTIONS *************/
 
-// Initialize SD card
+// Initialize the SD card
 void InitSd()
 {
   short i = 0;
@@ -173,7 +207,6 @@ void InitSd()
 void InitSerial()
 {
   short i = 0;
-  //Serial.begin(BAUDRATE);
   while (!Serial && i++ < 10) 
     { 
       Serial.begin(BAUDRATE);
@@ -182,7 +215,9 @@ void InitSerial()
 
   if(Serial)
   {
-    // If the port opened successfully, set the flag appropriately.
+    // If the port opened successfully, set the flag appropriately. <- This may be unneccessary,
+    // we could just check for Serial instead of the serialEnable flag, but I'm unsure of how this
+    // could affect the connection. Sticking with the serialEnable flag for safety.
     serialEnable = true;
     if (debug)
     {
@@ -193,6 +228,8 @@ void InitSerial()
 }
 
 /************* INTERRUPT FUNCTIONS *************/
+// Interrupt functions cannot take parameters nor return values,
+// this is why the counters are global variables.
 
 void TubeOne() { tubeOneHits++; }
 
