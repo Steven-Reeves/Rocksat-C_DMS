@@ -20,8 +20,6 @@
  *              This program runs from startup until the Arduino loses power.
  */
 
-#include <SPI.h>
-#include <SD.h>
 
 /*
  * SD card setup:
@@ -35,9 +33,13 @@
  * Chip select on pin 10, this will activate the SD card breakout board.
  */
 
+#include <SPI.h>
+#include <SD.h>
+
+
 /************* VARIABLE SET UP *************/
 
-#define BAUDRATE          9600 // Serial baudrate
+#define BAUDRATE          9600  // Serial baudrate
 #define chipSelect        10    // Chip select pin for SD card
 #define tubeOneIntPin     3     // Unshielded tube
 #define tubeTwoIntPin     2     // FE3O4 shielded tube
@@ -55,7 +57,7 @@ unsigned long tubeFourTotal = 0;  // Used to count total number of hits
 
 bool sdEnable = false;      // Flag set to true when SD card successfully initialized
 bool serialEnable = false;  // Flag set to true when Serial port successfully opened
-bool debug = false;         // Set flag to true for debugging -> produces more serial statements
+bool debug = true;          // Set flag to true for debugging -> produces informative serial statements
 
 void setup() 
 {
@@ -73,6 +75,7 @@ void setup()
   /******** INTERRUPT SETUP ********/
   // Interrupt pins must be set with the internal pullup resistors activated, otherwise
   // the interrupts are triggered by electrical noise, effectively nullifying all results.
+  
   pinMode(tubeOneIntPin, INPUT_PULLUP);
   pinMode(tubeTwoIntPin, INPUT_PULLUP);
   pinMode(tubeThreeIntPin, INPUT_PULLUP);
@@ -120,9 +123,9 @@ void loop() {
 
 void UpdateCount(unsigned long & totalHits, unsigned int & newHits, String shielding)
 {
-  // Counter variables are passed by reference in order to update/manipulate the global variables.
+  // Counter variables are passed by reference in order to modify the global variables.
   
-  totalHits += newHits; // Update total hit counter with new additions.
+  totalHits += newHits; // Update total hit counter.
   newHits = 0;          // Reset the intermediate counter to zero.
 
   // Build output string:
@@ -180,6 +183,18 @@ void WriteToSD(String &writeMe)
 void InitSd()
 {
   short i = 0;
+  pinMode(chipSelect, OUTPUT); // Chip select pin must be set as an output.
+  while (!sdEnable && i++ < 10)
+  {
+    if (SD.begin(chipSelect))
+    {
+      sdEnable = true;
+      if (Serial && debug) Serial.println("SD card initialized!");
+    }
+    delay(100);
+  }
+  if (!sdEnable && Serial && debug) Serial.println("Unable to initialize SD card.");
+  /*
   while (!SD.begin(chipSelect) && i++ < 100) { delay(10); } // Try to initialize SD card for up to 1 second.
   
   if (SD.begin(chipSelect))
@@ -201,6 +216,7 @@ void InitSd()
       Serial.println("Failed to initialize SD card.");  
     }
   }
+  */
 }
 
 // Initializes the serial port
