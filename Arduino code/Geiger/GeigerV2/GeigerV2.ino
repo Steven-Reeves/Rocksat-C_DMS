@@ -183,21 +183,13 @@ void WriteToSD(String &writeMe)
 void InitSd()
 {
   short i = 0;
-  pinMode(chipSelect, OUTPUT); // Chip select pin must be set as an output.
-  while (!sdEnable && i++ < 10)
-  {
-    if (SD.begin(chipSelect))
-    {
-      sdEnable = true;
-      if (Serial && debug) Serial.println("SD card initialized!");
-    }
-    delay(100);
-  }
-  if (!sdEnable && Serial && debug) Serial.println("Unable to initialize SD card.");
-  /*
-  while (!SD.begin(chipSelect) && i++ < 100) { delay(10); } // Try to initialize SD card for up to 1 second.
-  
-  if (SD.begin(chipSelect))
+  pinMode(chipSelect, OUTPUT); // Chip select pin must be set as an output, even if not being used.
+  while (!SD.begin(SS) && i++ < 100) { delay(10); } // Try to initialize SD card for up to 1 second.
+  // The above line may need to be removed, we should only have to attempt to open and initialize the 
+  // SD card once. 
+
+  // Can also try using SD.begin(SS, SPI_HALF_SPEED), this helps connect to older, slower, or larger cards.
+  if (SD.begin(SS)) // Use "SS" instead of chipSelect, default value helps when not connected to USB.
   {
     // If the SD card is initialized, set the flag appropriately.
     sdEnable = true;
@@ -216,7 +208,6 @@ void InitSd()
       Serial.println("Failed to initialize SD card.");  
     }
   }
-  */
 }
 
 // Initializes the serial port
