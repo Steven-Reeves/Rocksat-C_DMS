@@ -1,6 +1,6 @@
 /*
  * Authors:     Andrew Horn, Steven Reeves
- * Modified:    6/1/18
+ * Modified:    6/2/18
  * Filename:    GeigerV2.ino
  * 
  * Overview:    This code will be used in the 2018 Rocksat-C program for counting the number of times
@@ -57,7 +57,7 @@ unsigned long tubeFourTotal = 0;  // Used to count total number of hits
 
 bool sdEnable = false;      // Flag set to true when SD card successfully initialized
 bool serialEnable = false;  // Flag set to true when Serial port successfully opened
-bool debug = true;          // Set flag to true for debugging -> produces informative serial statements
+bool debug = false;          // Set flag to true for debugging -> produces informative serial statements
 
 void setup() 
 {
@@ -184,12 +184,10 @@ void InitSd()
 {
   short i = 0;
   pinMode(chipSelect, OUTPUT); // Chip select pin must be set as an output, even if not being used.
-  while (!SD.begin(SS) && i++ < 100) { delay(10); } // Try to initialize SD card for up to 1 second.
-  // The above line may need to be removed, we should only have to attempt to open and initialize the 
-  // SD card once. 
+  while (!SD.begin(chipSelect) && i++ < 100) { delay(10); } // Try to initialize SD card for up to 1 second.
 
-  // Can also try using SD.begin(SS, SPI_HALF_SPEED), this helps connect to older, slower, or larger cards.
-  if (SD.begin(SS)) // Use "SS" instead of chipSelect, default value helps when not connected to USB.
+  // Can also try using SD.begin(chipSelect, SPI_HALF_SPEED), this helps connect to older, slower, or larger cards.
+  if (SD.begin(chipSelect))
   {
     // If the SD card is initialized, set the flag appropriately.
     sdEnable = true;
