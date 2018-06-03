@@ -14,8 +14,8 @@ class DataThread:
     def __init__(self):
         self.__threads = [] # container for all the independent threads
         self.run_list = [] # container for flags used by each thread
-        self.num_threads = 0 # total number of threads (may not be needed)
-        self.started = False # 'killswitch' for all threads (may not be needed)
+        self.num_threads = 0 # total number of threads
+        self.started = False # 'killswitch' for all threads
 
     # called when thread's master timer runs out, kills the thread
     def main_timer_complete(self, thread_id):
@@ -29,7 +29,7 @@ class DataThread:
         while not port.is_open and self.run_list[thread_id]:
             try:
                 port.open() # reopen the port, if unsuccessful will loop through and try again
-                print("[reconnect] Connected!")
+                print("[reconnect] " + port_name + ": Connected!")
             except:
                 time.sleep(.25)
 
@@ -51,14 +51,23 @@ class DataThread:
 
     # PRIMARY THREAD FUNCTION #
     def read_serial(self, thread_id, port, baudrate=9600, filename='none', file_type='.txt'):
-        exit_code = 0 # exit code variable; 0 = success, 1 = keboard interrupt, 2 = serial disconnect
-        countdown = Timer(60, self.main_timer_complete, (thread_id,)) # master timer for thread (in seconds)
+        exit_code = 0 # exit code variable; 0 = success, 1 = keyboard interrupt, 2 = serial disconnect
+        countdown = Timer(1500, self.main_timer_complete, (thread_id,)) # master timer for thread (in seconds)
         countdown.start()
         start_time = time.time()
         if filename == 'none':
             filename = port
         try:
             # open serial port with 3 second timeout, dsrdtr=True will prevent restarting the Arduino
+            serial_success = False
+            while serial_success is not True and self.run_list[thread_id]:
+                try:
+                    s = serial.Serial(port, baudrate, timeout=3, dsrdtr=True)
+                    s.close()
+                    serial_success = True
+                except serial.SerialException:
+                    print(str("%2f" % (time.time() - start_time)) + " Port: " + port + " unable to connect!")
+                    time.sleep(1)
             with serial.Serial(port, baudrate, timeout=3, dsrdtr=True) as s:
                 s.flush() # flush before attempting first read
                 with open(filename + file_type, 'ab') as file: # open binary file, append new data
@@ -69,7 +78,7 @@ class DataThread:
                                 if buffer.split(): # if buffer contains data:
                                     time_lapsed = time.time() - start_time # get timestamp
                                     file.write(buffer) # write the serial buffer to the binary file
-                                    print("[{}] {} {}".format(filename, str("%2f" % time_lapsed), str(buffer)))
+                                    #print("[{}] {} {}".format(filename, str("%2f" % time_lapsed), str(buffer)))
                                 else: # if no data present, print error message
                                     print("[{}] 3 seconds no input".format(filename))
                         except serial.SerialException:
