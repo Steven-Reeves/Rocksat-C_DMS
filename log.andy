@@ -1,0 +1,92 @@
+0.001044 Port: /dev/ttyACM0 unable to connect!
+0.000858 Port: /dev/ttyUSB0 unable to connect!
+0.000784 Port: /dev/ttyUSB1 unable to connect!
+[Watcher] Activated
+0.000886 Port: /dev/ttyUSB2 unable to connect!
+1.003647 Port: /dev/ttyACM0 unable to connect!
+1.003271 Port: /dev/ttyUSB0 unable to connect!
+1.003597 Port: /dev/ttyUSB1 unable to connect!
+1.003310 Port: /dev/ttyUSB2 unable to connect!
+2.006154 Port: /dev/ttyACM0 unable to connect!
+2.005746 Port: /dev/ttyUSB0 unable to connect!
+2.006085 Port: /dev/ttyUSB1 unable to connect!
+2.005742 Port: /dev/ttyUSB2 unable to connect!
+3.008328 Port: /dev/ttyACM0 unable to connect!
+3.007868 Port: /dev/ttyUSB0 unable to connect!
+3.008146 Port: /dev/ttyUSB1 unable to connect!
+3.007835 Port: /dev/ttyUSB2 unable to connect!
+4.010423 Port: /dev/ttyACM0 unable to connect!
+4.009928 Port: /dev/ttyUSB0 unable to connect!
+4.010167 Port: /dev/ttyUSB1 unable to connect!
+4.009878 Port: /dev/ttyUSB2 unable to connect!
+5.011884 Port: /dev/ttyUSB0 unable to connect!
+5.014716 Port: /dev/ttyACM0 unable to connect!
+5.012532 Port: /dev/ttyUSB1 unable to connect!
+5.012306 Port: /dev/ttyUSB2 unable to connect!
+6.014476 Port: /dev/ttyUSB0 unable to connect!
+6.018725 Port: /dev/ttyACM0 unable to connect!
+6.015004 Port: /dev/ttyUSB1 unable to connect!
+6.014740 Port: /dev/ttyUSB2 unable to connect!
+7.016678 Port: /dev/ttyUSB0 unable to connect!
+7.020834 Port: /dev/ttyACM0 unable to connect!
+7.017175 Port: /dev/ttyUSB1 unable to connect!
+7.016881 Port: /dev/ttyUSB2 unable to connect!
+8.019205 Port: /dev/ttyUSB0 unable to connect!
+8.022949 Port: /dev/ttyACM0 unable to connect!
+8.019297 Port: /dev/ttyUSB1 unable to connect!
+8.018981 Port: /dev/ttyUSB2 unable to connect!
+9.021501 Port: /dev/ttyUSB0 unable to connect!
+9.025298 Port: /dev/ttyACM0 unable to connect!
+9.021679 Port: /dev/ttyUSB1 unable to connect!
+9.021410 Port: /dev/ttyUSB2 unable to connect!
+10.023991 Port: /dev/ttyUSB0 unable to connect!
+10.027689 Port: /dev/ttyACM0 unable to connect!
+10.024271 Port: /dev/ttyUSB1 unable to connect!
+10.023862 Port: /dev/ttyUSB2 unable to connect!
+11.026579 Port: /dev/ttyUSB0 unable to connect!
+11.030156 Port: /dev/ttyACM0 unable to connect!
+11.027446 Port: /dev/ttyUSB1 unable to connect!
+11.026317 Port: /dev/ttyUSB2 unable to connect!
+12.029122 Port: /dev/ttyUSB0 unable to connect!
+12.032946 Port: /dev/ttyACM0 unable to connect!
+12.029901 Port: /dev/ttyUSB1 unable to connect!
+12.028769 Port: /dev/ttyUSB2 unable to connect!
+13.035460 Port: /dev/ttyACM0 unable to connect!
+13.034906 Port: /dev/ttyUSB0 unable to connect!
+13.032392 Port: /dev/ttyUSB1 unable to connect!
+13.031288 Port: /dev/ttyUSB2 unable to connect!
+14.037958 Port: /dev/ttyACM0 unable to connect!
+14.037457 Port: /dev/ttyUSB0 unable to connect!
+14.034583 Port: /dev/ttyUSB1 unable to connect!
+14.033693 Port: /dev/ttyUSB2 unable to connect!
+15.040476 Port: /dev/ttyACM0 unable to connect!
+15.039971 Port: /dev/ttyUSB0 unable to connect!
+15.036989 Port: /dev/ttyUSB1 unable to connect!
+15.036111 Port: /dev/ttyUSB2 unable to connect!
+16.043176 Port: /dev/ttyACM0 unable to connect!
+16.042624 Port: /dev/ttyUSB0 unable to connect!
+16.039408 Port: /dev/ttyUSB1 unable to connect!
+16.038550 Port: /dev/ttyUSB2 unable to connect!
+17.046852 Port: /dev/ttyACM0 unable to connect!
+17.045801 Port: /dev/ttyUSB0 unable to connect!
+17.041472 Port: /dev/ttyUSB1 unable to connect!
+17.040729 Port: /dev/ttyUSB2 unable to connect!
+18.047233 Port: /dev/ttyUSB0 unable to connect!
+18.050733 Port: /dev/ttyACM0 unable to connect!
+18.043965 Port: /dev/ttyUSB1 unable to connect!
+18.043115 Port: /dev/ttyUSB2 unable to connect!
+[Thread 0 timer] Countdown complete
+[Thread 1 timer] Countdown complete
+[Thread 2 timer] Countdown complete
+[Thread 3 timer] Countdown complete
+[/dev/ttyUSB0] Unable to connect
+[/dev/ttyUSB0] Exit Code 2
+[/dev/ttyACM0] Unable to connect
+[/dev/ttyACM0] Exit Code 2
+[/dev/ttyUSB1] Unable to connect
+[/dev/ttyUSB1] Exit Code 2
+[/dev/ttyUSB2] Unable to connect
+[/dev/ttyUSB2] Exit Code 2
+[Watcher] All threads complete.
+[Watcher] Time to complete: 395748.42
+[DataThread] All threads complete.
